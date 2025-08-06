@@ -23,10 +23,10 @@ export const HeroSection = () => {
               <h1 className="text-4xl md:text-6xl font-bold leading-tight">
                 Unlock Your{' '}
                 <span className="gradient-text">Best Self</span>{' '}
-                with AI Meal Plans
+                with Fit Meals
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
-                Personalized, healthy gym-focused meals, delivered and tailored to your fitness goals. 
+                Personalized, healthy gym-focused meals, protein shakes, and nutritious sandwiches delivered to fuel your fitness goals. 
                 Hit bulking, cutting or maintenance targets—effortlessly.
               </p>
             </div>
@@ -36,7 +36,12 @@ export const HeroSection = () => {
                 <Sparkles className="mr-2 h-5 w-5" />
                 Customize Your Meal Plan
               </Button>
-              <Button variant="glass" size="lg" className="px-8 py-6 text-lg">
+              <Button 
+                variant="glass" 
+                size="lg" 
+                className="px-8 py-6 text-lg"
+                onClick={() => document.getElementById('meals')?.scrollIntoView({ behavior: 'smooth' })}
+              >
                 <Target className="mr-2 h-5 w-5" />
                 View Sample Meals
               </Button>

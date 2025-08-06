@@ -10,7 +10,7 @@ export const Header = () => {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
               <Utensils className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold gradient-text">AI Meals</span>
+            <span className="text-xl font-bold gradient-text">Fit Meals</span>
           </div>
 
           <nav className="hidden md:flex items-center gap-8">

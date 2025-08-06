@@ -16,7 +16,7 @@ export const ChatWidget = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Hi! I'm your AI nutrition assistant. I can help you create personalized meal plans based on your fitness goals. What are you looking to achieve?",
+      text: "Hi! I'm your Fit Meals AI assistant. I can help you with our protein shakes, healthy sandwiches, and power bowls. I can also answer questions about nutrition and our services. How can I help you today?",
       isUser: false,
       timestamp: new Date(),
     },
@@ -54,18 +54,20 @@ export const ChatWidget = () => {
   const generateAIResponse = (userInput: string): string => {
     const input = userInput.toLowerCase();
     
-    if (input.includes('bulk') || input.includes('gain') || input.includes('muscle')) {
-      return "Great! For bulking, I recommend a high-calorie meal plan with 2800-3200 calories daily. Focus on lean proteins (150-200g), complex carbs, and healthy fats. Would you like me to create a 7-day bulking meal plan?";
-    } else if (input.includes('cut') || input.includes('lose') || input.includes('fat')) {
-      return "Perfect for cutting! I'll design a calorie-deficit plan around 1800-2200 calories with high protein (120-150g) to preserve muscle. Includes metabolism-boosting foods. Shall I generate your personalized cutting meal plan?";
-    } else if (input.includes('maintain') || input.includes('maintenance')) {
-      return "Maintenance is key for sustainable health! I'll create a balanced 2200-2600 calorie plan with optimal macros. Great for consistent energy and body composition. Ready to see your maintenance meal plan?";
-    } else if (input.includes('vegetarian') || input.includes('vegan')) {
-      return "Excellent! I specialize in plant-based nutrition for fitness goals. I'll ensure you get complete proteins from legumes, quinoa, and nuts. What's your primary goal - bulking, cutting, or maintenance?";
-    } else if (input.includes('allergies') || input.includes('allergic')) {
-      return "No problem! I can customize meals for any allergies or dietary restrictions. Common ones I handle: nuts, dairy, gluten, shellfish. Please tell me your specific allergies so I can create a safe, delicious plan.";
+    if (input.includes('shake') || input.includes('protein') || input.includes('smoothie')) {
+      return "Our Power Protein Shake is perfect for you! It's a green smoothie with 35g protein, spinach, banana, and berries for ₹299. Great for pre/post workout nutrition. Would you like to order one?";
+    } else if (input.includes('sandwich') || input.includes('chicken') || input.includes('bread')) {
+      return "Try our Fit Chicken Sandwich! Grilled chicken with avocado on whole grain bread, packed with 38g protein for ₹399. Perfect for muscle building. Can I help you place an order?";
+    } else if (input.includes('bowl') || input.includes('acai') || input.includes('berry')) {
+      return "Our Acai Power Bowl is amazing for recovery! Antioxidant-rich acai with granola, berries, and 25g protein for ₹449. Great post-workout nutrition. Interested in ordering?";
+    } else if (input.includes('price') || input.includes('cost') || input.includes('order')) {
+      return "Our Fit Meals prices: Power Protein Shake ₹299, Fit Chicken Sandwich ₹399, Acai Power Bowl ₹449. All freshly prepared and delivered within 24 hours. Which one would you like to try?";
+    } else if (input.includes('contact') || input.includes('phone') || input.includes('call')) {
+      return "You can reach us at +91 9327795254 or email vishekdoshi162@gmail.com. We're available Mon-Sat: 9:00 AM - 8:00 PM. How can I assist you with your order?";
+    } else if (input.includes('delivery') || input.includes('time') || input.includes('when')) {
+      return "We deliver fresh Fit Meals across India within 24 hours! Orders are prepared fresh daily. For specific delivery times in your area, call us at 9327795254.";
     } else {
-      return "That's interesting! Based on your goals, I can create a personalized meal plan with exact portions, timing, and macro breakdowns. I also factor in your activity level and preferences. What's your main fitness goal right now?";
+      return "Welcome to Fit Meals! We offer protein shakes (₹299), healthy sandwiches (₹399), and power bowls (₹449) - all designed for your fitness goals. What would you like to know more about?";
     }
   };
 
@@ -97,7 +99,7 @@ export const ChatWidget = () => {
           <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-primary to-secondary text-white rounded-t-lg">
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5" />
-              <span className="font-semibold">AI Nutrition Assistant</span>
+              <span className="font-semibold">Fit Meals Assistant</span>
             </div>
             <Button
               onClick={() => setIsOpen(false)}

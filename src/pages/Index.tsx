@@ -3,11 +3,14 @@ import { HeroSection } from '@/components/HeroSection';
 import { FeaturesSection } from '@/components/FeaturesSection';
 import { MealsSection } from '@/components/MealsSection';
 import { PricingSection } from '@/components/PricingSection';
+import { ContactSection } from '@/components/ContactSection';
 import { ChatWidget } from '@/components/ChatWidget';
+import { Scene3D } from '@/components/Scene3D';
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      <Scene3D />
       <Header />
       
       <main>
@@ -24,6 +27,10 @@ const Index = () => {
         <section id="pricing">
           <PricingSection />
         </section>
+        
+        <section id="contact">
+          <ContactSection />
+        </section>
       </main>
       
       <ChatWidget />
@@ -31,7 +38,7 @@ const Index = () => {
       <footer className="py-12 bg-accent/20 border-t border-border/50">
         <div className="container mx-auto px-6 text-center">
           <p className="text-muted-foreground">
-            © 2024 AI Meals. Revolutionizing nutrition with artificial intelligence.
+            © 2024 Fit Meals. Revolutionizing nutrition with artificial intelligence.
           </p>
         </div>
       </footer>
