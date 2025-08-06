@@ -162,7 +162,8 @@
   }
 
   .chat-bubble.bot {
-    @apply bg-card border shadow-soft mr-auto;
+    @apply bg-card border mr-auto;
+    box-shadow: var(--shadow-soft);
   }
 
   .floating-action {
