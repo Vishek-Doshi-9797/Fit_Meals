@@ -37,7 +37,7 @@ export const HeroSection = () => {
                 Customize Your Meal Plan
               </Button>
               <Button 
-                variant="glass" 
+                variant="secondary" 
                 size="lg" 
                 className="px-8 py-6 text-lg"
                 onClick={() => document.getElementById('meals')?.scrollIntoView({ behavior: 'smooth' })}
