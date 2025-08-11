@@ -6,11 +6,13 @@ import { PricingSection } from '@/components/PricingSection';
 import { ContactSection } from '@/components/ContactSection';
 import { ChatWidget } from '@/components/ChatWidget';
 import { Scene3D } from '@/components/Scene3D';
-
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
-      <Scene3D />
+      <ErrorBoundary fallback={null}>
+        <Scene3D />
+      </ErrorBoundary>
       <Header />
       
       <main>

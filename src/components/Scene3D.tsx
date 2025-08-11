@@ -4,6 +4,19 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
+function isWebGLAvailable() {
+  try {
+    const canvas = document.createElement('canvas');
+    return !!(
+      canvas.getContext('webgl2') ||
+      canvas.getContext('webgl') ||
+      (canvas as any).getContext('experimental-webgl')
+    );
+  } catch {
+    return false;
+  }
+}
+
 function AnimatedSphere({ position, color }: { position: [number, number, number], color: string }) {
   const meshRef = useRef<THREE.Mesh>(null);
   
@@ -24,9 +37,24 @@ function AnimatedSphere({ position, color }: { position: [number, number, number
 }
 
 export const Scene3D = () => {
+  if (typeof window === 'undefined' || !isWebGLAvailable()) return null;
+
   return (
     <div className="fixed inset-0 pointer-events-none opacity-30 z-0">
-      <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
+      <Canvas
+        camera={{ position: [0, 0, 5], fov: 75 }}
+        onCreated={(state) => {
+          try {
+            const canvas = state.gl.getContext()?.canvas as HTMLCanvasElement | undefined;
+            canvas?.addEventListener('webglcontextlost', (e) => {
+              e.preventDefault();
+            });
+          } catch (e) {
+            // eslint-disable-next-line no-console
+            console.warn('WebGL context handling not available', e);
+          }
+        }}
+      >
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} />
         
