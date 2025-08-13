@@ -37,6 +37,8 @@ function AnimatedSphere({ position, color }: { position: [number, number, number
 }
 
 export const Scene3D = () => {
+  // Disable 3D scene in development to avoid R3F crashes from injected data-* attributes
+  if (import.meta.env.DEV) return null;
   if (typeof window === 'undefined' || !isWebGLAvailable()) return null;
 
   return (
