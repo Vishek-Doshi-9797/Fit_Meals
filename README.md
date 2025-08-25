@@ -60,6 +60,44 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## Backend (Express API)
+
+This project now includes a lightweight Express backend in `server/` with:
+
+- `/api/health`: health check
+- `/api/greeting`: sample endpoint
+
+### Development
+
+Run both frontend and backend together:
+
+```sh
+npm run dev:full
+```
+
+Frontend runs on `http://localhost:8080` and proxies `/api/*` to the backend.
+
+You can also run just the backend:
+
+```sh
+npm run server:dev
+```
+
+### Build & Preview
+
+```sh
+# Build frontend
+npm run build
+
+# Build backend
+npm run server:build
+
+# Start both (backend + Vite preview)
+npm start
+```
+
+The frontend `Header` shows the API health status.
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/068a41d4-4fb1-45ef-8986-bfc726275fa0) and click on Share -> Publish.
