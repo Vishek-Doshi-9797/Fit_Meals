@@ -10,7 +10,7 @@ function isWebGLAvailable() {
     return !!(
       canvas.getContext('webgl2') ||
       canvas.getContext('webgl') ||
-      (canvas as any).getContext('experimental-webgl')
+      (canvas as HTMLCanvasElement & { getContext(contextId: 'experimental-webgl'): RenderingContext | null }).getContext('experimental-webgl')
     );
   } catch {
     return false;
@@ -52,7 +52,6 @@ export const Scene3D = () => {
               e.preventDefault();
             });
           } catch (e) {
-            // eslint-disable-next-line no-console
             console.warn('WebGL context handling not available', e);
           }
         }}
