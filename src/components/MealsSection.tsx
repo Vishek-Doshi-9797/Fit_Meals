@@ -1,53 +1,58 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, Flame, Zap, ShoppingCart } from 'lucide-react';
+import { Clock, Flame, Zap, ShoppingCart, Loader2 } from 'lucide-react';
 import { PaymentModal } from '@/components/PaymentModal';
 import { FadeInUp, ScaleIn } from '@/components/ScrollAnimations';
-import proteinShake from '@/assets/protein-shake.jpg';
-import healthySandwich from '@/assets/healthy-sandwich.jpg';
-import acaiBowl from '@/assets/acai-bowl.jpg';
+import { mealsApi, Meal } from '@/lib/api';
+import { useToast } from '@/hooks/use-toast';
 
-const meals = [
-  {
-    title: 'Power Protein Shake',
-    description: 'Green protein smoothie with spinach, banana, whey protein, and berries. Perfect pre/post workout fuel!',
-    image: proteinShake,
-    calories: '420 cal',
-    protein: '35g protein',
-    time: '2 min prep',
-    price: '₹299',
-    tags: ['High Protein', 'Pre/Post Workout'],
-  },
-  {
-    title: 'Fit Chicken Sandwich', 
-    description: 'Grilled chicken avocado sandwich on whole grain bread with fresh vegetables. Perfect muscle-building meal.',
-    image: healthySandwich,
-    calories: '580 cal',
-    protein: '38g protein', 
-    time: 'Ready to eat',
-    price: '₹399',
-    tags: ['Muscle Building', 'Fresh'],
-  },
-  {
-    title: 'Acai Power Bowl',
-    description: 'Antioxidant-rich acai bowl with granola, fresh berries, coconut flakes and protein powder. Perfect recovery meal.',
-    image: acaiBowl,
-    calories: '485 cal',
-    protein: '25g protein',
-    time: 'Ready to eat',
-    price: '₹449',
-    tags: ['Recovery', 'Antioxidants'],
-  },
-];
+
 
 export const MealsSection = () => {
-  const [selectedMeal, setSelectedMeal] = useState<{ title: string; price: string } | null>(null);
+  const [meals, setMeals] = useState<Meal[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
+  const { toast } = useToast();
 
-  const handleOrderClick = (meal: { title: string; price: string }) => {
+  useEffect(() => {
+    const fetchFeaturedMeals = async () => {
+      try {
+        setLoading(true);
+        const featuredMeals = await mealsApi.getFeatured();
+        setMeals(featuredMeals);
+      } catch (error) {
+        console.error('Failed to fetch meals:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to load meals. Please try again later.',
+          variant: 'destructive',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedMeals();
+  }, [toast]);
+
+  const handleOrderClick = (meal: Meal) => {
     setSelectedMeal(meal);
   };
+
+  if (loading) {
+    return (
+      <section className="py-20 bg-background">
+        <div className="container mx-auto px-6">
+          <div className="text-center">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
+            <p className="text-muted-foreground">Loading delicious meals...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
   return (
     <section className="py-20 bg-background">
       <div className="container mx-auto px-6">
@@ -64,20 +69,20 @@ export const MealsSection = () => {
 
         <div className="grid md:grid-cols-3 gap-8">
           {meals.map((meal, index) => (
-            <ScaleIn delay={index * 0.2}>
-              <Card key={index} className="group overflow-hidden border-0 shadow-card hover-glow">
+            <ScaleIn key={meal._id} delay={index * 0.2}>
+              <Card className="group overflow-hidden border-0 shadow-card hover-glow">
               <div className="relative overflow-hidden">
                 <img
-                  src={meal.image}
-                  alt={meal.title}
+                  src={meal.imageUrl}
+                  alt={meal.name}
                   className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 <div className="absolute bottom-4 left-4 space-y-2">
                   <div className="flex gap-2">
-                    {meal.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-xs">
-                        {tag}
+                    {meal.dietaryTags.slice(0, 2).map((tag) => (
+                      <Badge key={tag} variant="secondary" className="text-xs capitalize">
+                        {tag.replace('-', ' ')}
                       </Badge>
                     ))}
                   </div>
@@ -85,30 +90,30 @@ export const MealsSection = () => {
               </div>
 
               <div className="p-6 space-y-4">
-                <h3 className="text-2xl font-bold">{meal.title}</h3>
+                <h3 className="text-2xl font-bold">{meal.name}</h3>
                 <p className="text-muted-foreground leading-relaxed">{meal.description}</p>
                 
                 <div className="flex items-center justify-between pt-4 border-t border-border/50">
                   <div className="flex items-center gap-1 text-sm">
                     <Flame className="w-4 h-4 text-secondary" />
-                    <span className="font-medium">{meal.calories}</span>
+                    <span className="font-medium">{meal.nutritionFacts.calories} cal</span>
                   </div>
                   <div className="flex items-center gap-1 text-sm">
                     <Zap className="w-4 h-4 text-primary" />
-                    <span className="font-medium">{meal.protein}</span>
+                    <span className="font-medium">{meal.nutritionFacts.protein}g protein</span>
                   </div>
                   <div className="flex items-center gap-1 text-sm">
                     <Clock className="w-4 h-4 text-muted-foreground" />
-                    <span className="font-medium">{meal.time}</span>
+                    <span className="font-medium">{meal.preparationTime} min</span>
                   </div>
                 </div>
                 
                 <div className="flex items-center justify-between pt-4">
-                  <div className="text-2xl font-bold text-primary">{meal.price}</div>
+                  <div className="text-2xl font-bold text-primary">${meal.price}</div>
                   <Button 
                     variant="hero" 
                     size="sm"
-                    onClick={() => handleOrderClick({ title: meal.title, price: meal.price })}
+                    onClick={() => handleOrderClick(meal)}
                   >
                     <ShoppingCart className="w-4 h-4 mr-2" />
                     Order Now
@@ -123,8 +128,8 @@ export const MealsSection = () => {
         <PaymentModal
           isOpen={!!selectedMeal}
           onClose={() => setSelectedMeal(null)}
-          mealTitle={selectedMeal?.title || ''}
-          price={selectedMeal?.price || ''}
+          mealTitle={selectedMeal?.name || ''}
+          price={selectedMeal?.price.toString() || ''}
         />
       </div>
     </section>
