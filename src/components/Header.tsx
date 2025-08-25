@@ -1,7 +1,14 @@
 import { Button } from '@/components/ui/button';
 import { Utensils } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { fetchJson, getApiBaseUrl } from '@/lib/api';
 
 export const Header = () => {
+  const { data } = useQuery({
+    queryKey: ['api-health'],
+    queryFn: () => fetchJson<{ status: string }>(`${getApiBaseUrl()}/health`),
+    staleTime: 60_000,
+  });
   return (
     <header className="fixed top-0 left-0 right-0 z-40 glass-effect border-b border-white/10">
       <div className="container mx-auto px-6 py-4">
@@ -19,9 +26,14 @@ export const Header = () => {
             <a href="#pricing" className="text-foreground hover:text-primary transition-colors">Pricing</a>
           </nav>
 
-          <Button variant="hero" size="lg">
-            Get Started
-          </Button>
+          <div className="hidden md:flex items-center gap-4">
+            <div className="text-xs text-muted-foreground">
+              API: {data?.status === 'ok' ? 'online' : 'checking...'}
+            </div>
+            <Button variant="hero" size="lg">
+              Get Started
+            </Button>
+          </div>
         </div>
       </div>
     </header>
