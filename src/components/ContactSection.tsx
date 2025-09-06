@@ -1,10 +1,63 @@
+import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 export const ContactSection = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('submit-contact', {
+        body: formData,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Message sent! 🎉",
+        description: "Thank you for reaching out! We'll get back to you within 24 hours.",
+      });
+
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        message: '',
+      });
+    } catch (error: any) {
+      toast({
+        title: "Failed to send message",
+        description: error.message || "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section className="py-20 bg-accent/20">
       <div className="container mx-auto px-6">
@@ -69,15 +122,46 @@ export const ContactSection = () => {
           {/* Contact Form */}
           <Card className="p-8 shadow-card">
             <h3 className="text-2xl font-bold mb-6">Send us a Message</h3>
-            <form className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-4">
-                <Input placeholder="Your Name" />
-                <Input placeholder="Your Email" type="email" />
+                <Input 
+                  name="name"
+                  placeholder="Your Name" 
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
+                <Input 
+                  name="email"
+                  placeholder="Your Email" 
+                  type="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
-              <Input placeholder="Subject" />
-              <Textarea placeholder="Your Message" className="min-h-32" />
-              <Button variant="hero" size="lg" className="w-full">
-                Send Message
+              <Input 
+                name="phone"
+                placeholder="Phone Number (Optional)" 
+                value={formData.phone}
+                onChange={handleInputChange}
+              />
+              <Textarea 
+                name="message"
+                placeholder="Your Message" 
+                className="min-h-32"
+                value={formData.message}
+                onChange={handleInputChange}
+                required
+              />
+              <Button 
+                variant="hero" 
+                size="lg" 
+                className="w-full"
+                type="submit"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </Button>
             </form>
           </Card>
