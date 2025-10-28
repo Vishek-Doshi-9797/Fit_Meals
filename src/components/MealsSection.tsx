@@ -9,6 +9,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
+import proteinShakeImg from '@/assets/protein-shake.jpg';
+import healthySandwichImg from '@/assets/healthy-sandwich.jpg';
+import acaiBowlImg from '@/assets/acai-bowl.jpg';
 
 interface Meal {
   id: string;
@@ -87,6 +90,15 @@ export const MealsSection = () => {
     return `₹${(price / 100).toFixed(0)}`;
   };
 
+  const getImageUrl = (imageUrl: string) => {
+    const imageMap: Record<string, string> = {
+      '/src/assets/protein-shake.jpg': proteinShakeImg,
+      '/src/assets/healthy-sandwich.jpg': healthySandwichImg,
+      '/src/assets/acai-bowl.jpg': acaiBowlImg,
+    };
+    return imageMap[imageUrl] || imageUrl;
+  };
+
   const getCategoryTags = (category: string) => {
     switch (category) {
       case 'shake':
@@ -132,7 +144,7 @@ export const MealsSection = () => {
               <Card className="group overflow-hidden border-0 shadow-card hover-glow">
                 <div className="relative overflow-hidden">
                   <img
-                    src={meal.image_url}
+                    src={getImageUrl(meal.image_url)}
                     alt={meal.name}
                     className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
                   />
